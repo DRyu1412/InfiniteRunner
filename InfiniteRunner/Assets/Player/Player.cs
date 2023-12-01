@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     Transform[] LaneTransform;
+    [SerializeField]
+    float moveSpeed;
 
     Vector3 destination;
     int currentLaneIndex;
@@ -40,7 +42,8 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
-        transform.position = destination;
+        transform.position = Vector3.Lerp(transform.position, destination, Time.deltaTime * moveSpeed);
+
     }
 
     private void MovePerformed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
