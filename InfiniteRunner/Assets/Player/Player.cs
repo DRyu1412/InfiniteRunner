@@ -10,8 +10,12 @@ public class Player : MonoBehaviour
     Rigidbody rigid;
 
     [SerializeField] Transform[] LaneTransform;
-    [SerializeField] float moveSpeed;
-    [SerializeField] float jumpHeight;
+    [SerializeField] float moveSpeed = 8.0f;
+    [SerializeField] float jumpHeight= 2.0f;
+
+    [SerializeField] Transform groundCheck;
+    [SerializeField] [Range(0,1)] float groundCheckRadius = 0.2f;
+    [SerializeField] LayerMask GroundLayer;
 
     Vector3 destination;
     int currentLaneIndex;
@@ -47,6 +51,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (!isGround())
+            return;
         float TranformX = Mathf.Lerp(transform.position.x, destination.x, Time.deltaTime * moveSpeed);
         transform.position = new Vector3(TranformX, transform.position.y, transform.position.z);
 
@@ -83,8 +89,14 @@ public class Player : MonoBehaviour
 
     private void JumpPerformed(InputAction.CallbackContext obj)
     {
-        Debug.Log("Jump");
+        if (!isGround())
+            return;
         float jumpSpeed = Mathf.Sqrt(2 * jumpHeight * Physics.gravity.magnitude);
         rigid.AddForce(new Vector3(0.0f, jumpSpeed, 0.0f), ForceMode.VelocityChange);
+    }
+
+    private bool isGround()
+    {
+        return Physics.CheckSphere(groundCheck.position, groundCheckRadius, GroundLayer);
     }
 }
