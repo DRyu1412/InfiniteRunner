@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     PlayerInput playerInput;
     Rigidbody rigid;
+    [SerializeField] Animator anim;
 
     [SerializeField] Transform[] LaneTransform;
     [SerializeField] float moveSpeed = 8.0f;
@@ -35,6 +36,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
+        //anim = GetComponent<Animator>();
 
         playerInput.gameplay.Move.performed += MovePerformed;
         playerInput.gameplay.Jump.performed += JumpPerformed;
@@ -52,7 +54,12 @@ public class Player : MonoBehaviour
     void Update()
     {
         if (!isGround())
+        {
+            anim.SetBool("Grounded", false);
             return;
+        }
+        anim.SetBool("Grounded", true);
+
         float TranformX = Mathf.Lerp(transform.position.x, destination.x, Time.deltaTime * moveSpeed);
         transform.position = new Vector3(TranformX, transform.position.y, transform.position.z);
 
